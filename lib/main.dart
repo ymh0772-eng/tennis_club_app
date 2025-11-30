@@ -1,56 +1,80 @@
 // 파일명: lib/main.dart
 // 작성일: 2025-11-30
 // 작성자: 명화님
-// 설명: 테니스 클럽 앱의 진입점 및 기본 화면 골격 (Day 1)
+// 설명: 버튼을 누르면 출석 인원이 올라가는 기능 구현 (Day 2)
 
 import 'package:flutter/material.dart';
 
-// 1. [함수] 프로그램 시작점 (Engine Start)
 void main() {
-  runApp(const MyApp());
+  runApp(const TennisApp());
 }
 
-// 2. [위젯] 앱 전체를 설정하는 클래스 (Ship Configuration)
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class TennisApp extends StatelessWidget {
+  const TennisApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false, // 오른쪽 위 'Debug' 리본 없애기
+      debugShowCheckedModeBanner: false,
       title: '테니스 클럽',
-      theme: ThemeData(
-        primarySwatch: Colors.lightGreen, // 테니스장 잔디색 테마
-      ),
-      home: const FirstScreen(), // 첫 화면으로 FirstScreen을 지정
+      theme: ThemeData(primarySwatch: Colors.lightGreen),
+      home: const AttendanceScreen(), // 여기를 교체했습니다.
     );
   }
 }
 
-// 3. [위젯] 실제 사용자에게 보여질 첫 번째 화면 (Main Deck)
-class FirstScreen extends StatelessWidget {
-  const FirstScreen({super.key});
+// 1. [위젯] 상태(데이터)를 가질 수 있는 위젯 (엔진이 있는 배)
+class AttendanceScreen extends StatefulWidget {
+  const AttendanceScreen({super.key});
+
+  @override
+  State<AttendanceScreen> createState() => _AttendanceScreenState();
+}
+
+// 2. [State] 실제 데이터와 화면을 관리하는 클래스 (조타실)
+class _AttendanceScreenState extends State<AttendanceScreen> {
+  // 변수 선언: 출석 인원 수 (초기값 0명)
+  int attendanceCount = 0;
+
+  // 함수: 버튼을 누르면 실행될 동작
+  void _addMember() {
+    setState(() {
+      attendanceCount++; // 숫자를 1 증가시킴
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // 3-1. 상단 바 (App Bar)
       appBar: AppBar(
-        title: const Text('명화님의 테니스 클럽'),
-        centerTitle: true, // 제목 가운데 정렬
+        title: const Text('테니스 클럽 출석부'),
         backgroundColor: Colors.lightGreen,
       ),
-      // 3-2. 본문 (Body)
-      body: const Center(
-        child: Text(
-          'Day 1: 기초 공사 완료\nGitHub 연동 준비 끝!',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: Colors.black87,
-          ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center, // 수직 중앙 정렬
+          children: <Widget>[
+            const Text(
+              '현재 출석 인원:',
+              style: TextStyle(fontSize: 20),
+            ),
+            // 변수(attendanceCount)를 화면에 표시
+            Text(
+              '$attendanceCount 명',
+              style: TextStyle(
+                fontSize: 50,
+                fontWeight: FontWeight.bold,
+                color: Colors.green[800],
+              ),
+            ),
+          ],
         ),
+      ),
+      // 우측 하단 + 버튼
+      floatingActionButton: FloatingActionButton(
+        onPressed: _addMember, // 버튼을 누르면 _addMember 함수 실행
+        tooltip: '출석 체크',
+        child: const Icon(Icons.add),
       ),
     );
   }
